@@ -1,0 +1,162 @@
+controller_server:
+  ros__parameters:
+    controller_frequency: 30.0
+    FollowPath:
+      plugin: "nav2_mppi_controller::MPPIController"
+
+      time_steps: 27
+      model_dt: 0.0513032
+      batch_size: 1960
+
+      vx_std: 0.5481140
+      vy_std: 0.0
+      wz_std: 0.5525990
+
+      vx_max: 2.3977543
+      vx_min: -0.180248
+      vy_max: 0.0
+      wz_max: 3.4999476
+
+      iteration_count: 1
+      prune_distance: 2.0767183
+
+      temperature: 0.8690457
+      gamma: 0.0615154
+
+      motion_model: "DiffDrive"
+      visualize: false
+
+      critics: ["ConstraintCritic", "CostCritic", "GoalCritic", "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic", "PathAngleCritic", "PreferForwardCritic", "TwirlingCritic"]
+
+      ConstraintCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 2.5561126
+
+      GoalCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 8.4919605
+        threshold_to_consider: 3.3459555
+
+      GoalAngleCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 1.8388280
+        threshold_to_consider: 2.2453625
+
+      PreferForwardCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 0.9001833
+        threshold_to_consider: 7.4031508
+
+      ObstaclesCritic:
+        enabled: true
+        cost_power: 1
+        consider_footprint: true
+        repulsion_weight: 0.2294499
+        critical_weight: 7.9408872
+        collision_cost: 10000.0
+        collision_margin_distance: 23.814616
+        near_goal_distance: 0.2000298
+
+      CostCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 0.3940376
+        critical_cost: 5.3351790
+        consider_footprint: true
+        collision_cost: 1000000.0
+        near_goal_distance: 371.09657
+
+      PathAlignCritic:
+        enabled: true
+        cost_power: 1
+        cost_weight: 1.6639255
+        max_path_occupancy_ratio: 38.818693
+        trajectory_point_step: 3
+        threshold_to_consider: 0.1552857
+        offset_from_furthest: 15
+        use_path_orientations: false
+  
+controller_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: true
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 15.0
+      publish_frequency: 5.0
+      global_frame: odom
+      robot_base_frame: base_link
+      use_sim_time: true
+      rolling_window: true
+      width: 8
+      height: 8
+      resolution: 0.1334
+      #robot_radius: 0.554
+      footprint: "[[0.5, 0.42], [0.5, -0.42], [-0.5, -0.42], [-0.5, 0.42]]"
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: true
+        map_topic: /map
+        enabled: true
+        subscribe_to_updates: true
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.7
+        cost_scaling_factor: 10.0
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: true           
+  local_costmap_client:
+    ros__parameters:
+      use_sim_time: true
+  local_costmap_rclcpp_node:
+    ros__parameters:
+      use_sim_time: true
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 5.0
+      global_frame: map
+      robot_base_frame: base_link
+      use_sim_time: true
+      #robot_radius: 0.554
+      footprint: "[[0.5, 0.42], [0.5, -0.42], [-0.5, -0.42], [-0.5, 0.42]]"
+      resolution: 0.1334
+      track_unknown_space: false
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: true        
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: true
+        map_topic: /map
+        enabled: true
+        subscribe_to_updates: true   
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 10.0
+        inflation_radius: 0.8
+        always_send_full_costmap: true
+  global_costmap_client:
+    ros__parameters:
+      use_sim_time: true
+  global_costmap_rclcpp_node:
+    ros__parameters:
+      use_sim_time: true
+  
+velocity_smoother:        
+  ros__parameters:
+    use_sim_time: true
+    smoothing_frequency: 50.0    
+    max_velocity: [2.5, 0.0, 2.5]
+    max_accel: [3.0, 0.0, 4.0]
+    max_decel: [-3.0, 0.0, -7.0]

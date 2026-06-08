@@ -1,0 +1,12 @@
+<root main_tree_to_execute="MainLoop">
+<BehaviorTree ID="MainLoop">
+  <PipelineSequence name="NavPipeline">
+    <RateController hz="1.0">
+      <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+    </RateController>
+    <KeepRunningUntilFailure>
+      <FollowPath path="{path}" controller_id="FollowPath"/>
+    </KeepRunningUntilFailure>
+  </PipelineSequence>
+</BehaviorTree>
+</root>
