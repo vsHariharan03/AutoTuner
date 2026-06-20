@@ -3,9 +3,9 @@
 
 ## Overview
 
-We automate the tuning of the Nav2 MPPI (Model Predictive Path Integral) controller parameters using Bayesian Optimization.
+Thw aim of my project is to automate the tuning of the Nav2 MPPI (Model Predictive Path Integral) controller parameters using Bayesian Optimization.
 
-And allows users to run multiple instances of gazebo in parallel to speed up the Optimization process.
+We distribute optimization across multiple instances of gazebo in parallel to speed up the optimization process.
 
 The system evaluates navigation performance in simulation, computes a performance score, and iteratively searches for better controller parameters using Bayesian Optimization.
 
@@ -24,10 +24,10 @@ The architecture consists of four major components:
 
 The system has four pieces that work together:
 - Bayesian Optimization Server
-The brain of the operation. It keeps track of all previous simulation results and uses them to decide which parameters to try next. It talks to the rest of the system over a Unix socket at /tmp/my_socket.
+ It keeps track of all previous simulation results and uses them to decide which parameters to try next. It talks to the rest of the system over a Unix socket at /tmp/my_socket.
 
 - Socket Workers
-Think of these as middlemen — one per simulation instance. Each worker has its own socket (/tmp/my_socket0, /tmp/my_socket1, etc.) and handles passing scores up to the optimizer and new parameters back down. By default, up to 8 simulations can run in parallel, though you can increase this.
+One per simulation instance. Each worker has its own socket (/tmp/my_socket0, /tmp/my_socket1, etc.) and handles passing scores up to the optimizer and new parameters back down. By default, up to 8 simulations can run in parallel, though you can increase this.
 
 - Score Accumulator (ROS Node)
 Runs inside each simulation. It collects navigation scores from ROS topics and forwards them to its assigned worker socket. It also receives new parameters back and applies them to the running controller. Each simulation is isolated using a different ROS_DOMAIN_ID, which maps directly to its socket — so domain 3 talks to /tmp/my_socket3.
