@@ -3,7 +3,7 @@
 
 ## Overview
 
-Thw aim of my project is to automate the tuning of the Nav2 MPPI (Model Predictive Path Integral) controller parameters using Bayesian Optimization.
+The aim of my project is to automate the tuning of the Nav2 MPPI (Model Predictive Path Integral) controller parameters using Bayesian Optimization.
 
 We distribute optimization across multiple instances of gazebo in parallel to speed up the optimization process.
 
